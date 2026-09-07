@@ -1,0 +1,21 @@
+name: probe
+
+on:
+  workflow_dispatch:
+    inputs:
+      meticulous-commit-sha:
+        description: The commit to build. Mirrors the input the Meticulous actions pin.
+        required: false
+        type: string
+
+# Keyed on the pinned commit, the way a customer serializes base builds. A second dispatch of
+# the same commit is parked by GitHub rather than run.
+concurrency:
+  group: probe-${{ inputs.meticulous-commit-sha }}
+  cancel-in-progress: false
+
+jobs:
+  hold-the-group:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sleep 300
